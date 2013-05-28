@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Score">
+
+    <typeAlias alias="score" type="net.baiyw.killfocus.pojo.Score"/>
+  
+    <sql id="score">
+        select id, name, score
+        from score
+    </sql>
+    
+    <insert id="insertScore" parameterClass="score">
+         insert into score(name,score)
+         values(#name#, #score#)
+    </insert>
+    <update id="updateScore" parameterClass="score">
+         update score set 
+         name=#name#, score=#score#
+         where id=#id#
+    </update>
+    <select id="getScoreByid" resultClass="score" parameterClass="java.lang.Integer">
+        <include refid="score"/>
+        where id = #id#
+    </select>
+	<select id="getScoreList" resultClass="score" parameterClass="java.util.Map">
+        <include refid="score"/>
+        <dynamic prepend="where" >   
+	    	<isNotEmpty property="name" prepend="and">
+	     		name = #name#
+	    	</isNotEmpty>
+	    	<isNotEmpty property="orderby" prepend="">
+	     		order by $orderby$
+	    	</isNotEmpty>
+	    	<isNotEmpty property="orderby" prepend="">
+	     		$seq$
+	    	</isNotEmpty>
+	   </dynamic>
+        limit #offset#, #size#
+    </select>
+</sqlMap>
